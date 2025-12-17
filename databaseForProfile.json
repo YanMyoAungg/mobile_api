@@ -1,0 +1,29 @@
+[
+{"type":"header","version":"5.2.0","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"project"},
+{"type":"table","name":"roles","database":"project","data":
+[
+{"id":"1","name":"User","value":"11"},
+{"id":"2","name":"Manager","value":"22"},
+{"id":"3","name":"Admin","value":"33"}
+]
+}
+,{"type":"table","name":"users","database":"project","data":
+[
+{"id":"1","name":"Alice","email":"alice@gmail.com","phone":"0999558","address":"Some Address","password":"password","role_id":"3","photo":null,"suspended":"0","created_at":"2023-07-01 11:46:08","updated_at":null},
+{"id":"15","name":"Elmore Terry","email":"klein.brooklyn@weissnat.com","phone":"(317) 801-4230","address":"897 Chester Track Apt. 578\nEast Clarissa, ND 49559","password":"password","role_id":"2","photo":null,"suspended":"0","created_at":"2023-07-01 12:02:11","updated_at":null},
+{"id":"16","name":"Manley Brown","email":"stephanie75@kiehn.com","phone":"706-646-9254","address":"70767 Shemar Stravenue\nRempelfurt, CA 31995-2973","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-01 12:02:11","updated_at":null},
+{"id":"17","name":"Hilma Rosenbaum DVM","email":"dessie.johnston@hahn.com","phone":"+1-248-579-4793","address":"8765 Agnes Underpass\nWest Dereck, CT 60352","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-01 12:02:11","updated_at":null},
+{"id":"18","name":"Dr. D'angelo Kerluke","email":"karli.leffler@gmail.com","phone":"574.781.0768","address":"47052 Sydni Hollow Suite 309\nDoyleborough, PA 57546","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-01 12:02:11","updated_at":null},
+{"id":"19","name":"Chandler Sawayn","email":"lrunolfsson@durgan.com","phone":"+16788160965","address":"370 Legros Canyon Suite 859\nPort Zariahaven, NM 72076-7821","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-01 12:02:11","updated_at":null},
+{"id":"20","name":"Arvilla Bartell","email":"audreanne86@monahan.com","phone":"701.427.1947","address":"10968 Raleigh Crossroad\nWardberg, GA 74491","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-01 12:02:11","updated_at":null},
+{"id":"21","name":"Davon Schoen","email":"batz.daphne@champlin.com","phone":"+1-951-862-5641","address":"4123 O'Hara Path Apt. 123\nCorwinmouth, MD 43168-5233","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-01 12:02:11","updated_at":null},
+{"id":"35","name":"Zenith","email":"asf8f@gmail.com","phone":"2626262","address":"mayangone","password":"password","role_id":"2","photo":null,"suspended":"0","created_at":"2023-07-03 02:00:16","updated_at":null},
+{"id":"36","name":"bob","email":"bob@gmail.com","phone":"123456","address":"mayangone","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-03 02:20:41","updated_at":null},
+{"id":"42","name":"cat","email":"cat@gmail.com","phone":"099555","address":"mayangone","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-03 04:20:44","updated_at":null},
+{"id":"43","name":"dog","email":"dog@gmail.com","phone":"099555","address":"mayangone","password":"password","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-03 18:20:29","updated_at":null},
+{"id":"68","name":"Zenith","email":"dfdf6@gmail.com","phone":"12464","address":"mayangone","password":"$2y$10$E4iIUIwUR56N44TAzMQEUOEZ4QFiA7dwiKeG\/QIlUsHgcsnQPHEi6","role_id":"1","photo":"shin.jpg","suspended":"0","created_at":"2023-07-09 12:30:49","updated_at":null},
+{"id":"72","name":"cow","email":"cow@gmail.com","phone":"123456","address":"mayangone","password":"$2y$10$jdG3de4\/AFNv9OQW0KIzkuh2AvFVyMm\/UpR40292gllZGEYZHJqKu","role_id":"1","photo":null,"suspended":"0","created_at":"2023-07-10 05:13:28","updated_at":null}
+]
+}
+]
