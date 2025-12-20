@@ -15,25 +15,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$name = $_POST['name'] ?? '';
+$username = $_POST['username'] ?? '';
 $email = $_POST['email'] ?? '';
 $phone = $_POST['phone'] ?? '';
 $address = $_POST['address'] ?? '';
 $password = $_POST['password'] ?? '';
 
 // Basic validation
-if (!$name || !$email || !$password) {
+if (!$username || !$email || !$password) {
     http_response_code(400); // Bad Request
-    echo json_encode(['error' => 'Missing required fields (name, email, password)']);
+    echo json_encode(['success' => false, 'message' => 'Validation error', 'error' => 'Missing required fields (username, email, password)']);
     exit;
 }
-echo "name". $name;
-echo "email". $email;
-echo "phone". $phone;
-echo "address". $address;
-echo "password". $password;
 $data = [
-    'name' => $name,
+    'username' => $username,
     'email' => $email,
     'phone' => $phone,
     'address' => $address,
@@ -47,16 +42,17 @@ try {
     if ($id) {
         http_response_code(201); // Created
         echo json_encode([
+            'success' => true,
             'message' => 'User registered successfully',
-            'user_id' => $id
+            'data' => ['user_id' => $id]
         ]);
     } else {
         http_response_code(500);
-        echo json_encode(['error' => 'Failed to register user']);
+        echo json_encode(['success' => false, 'message' => 'Registration failed', 'error' => 'Failed to register user']);
     }
 
 } catch (Exception $e) {
     http_response_code(500);
     // In a real production app, handle specific SQL errors (like duplicate email) more gracefully
-    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Registration error', 'error' => 'Database error: ' . $e->getMessage()]);
 }

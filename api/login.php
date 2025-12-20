@@ -15,41 +15,43 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$username = $_POST['username'] ?? '';
+$email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
 
 // Basic validation
-if (!$username || !$password) {
+if (!$email || !$password) {
     http_response_code(400); // Bad Request
-    echo json_encode(['error' => 'Missing username or password']);
+    echo json_encode(['error' => 'Missing email or password']);
     exit;
 }
 
 try {
     $table = new UsersTable(new Mysql());
-    $user = $table->findByUsernameAndPassword($username, $password);
+    $user = $table->findByEmailAndPassword($email, $password);
     
     if ($user) {
         http_response_code(200); // OK
         echo json_encode([
+            'success' => true,
             'message' => 'Login successful',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'phone' => $user->phone,
-                'address' => $user->address,
-                'role_id' => $user->role_id
+            'data' => [
+                'user' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'address' => $user->address
+                ]
             ]
         ]);
     } else {
         http_response_code(401); // Unauthorized
-        echo json_encode(['error' => 'Incorrect username or password']);
+        echo json_encode(['success' => false, 'message' => 'Login failed', 'error' => 'Incorrect email or password']);
     }
 
 } catch (Exception $e) {
     http_response_code(500);
     error_log("Database Error: " . $e->getMessage());
-    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Login failed', 'error' => 'Database error: ' . $e->getMessage()]);
 }
 

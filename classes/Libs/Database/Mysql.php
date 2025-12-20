@@ -4,7 +4,7 @@ namespace Libs\Database;
 
 use PDO;
 use PDOException;
-
+use Helpers\DotenvLoader;
 class Mysql
 {
     private $db = null;
@@ -14,15 +14,17 @@ class Mysql
     private $dbname;
 
     public function __construct(
-        $dbhost = "localhost",
-        $dbuser = "root",
-        $dbpass = "zenith172421",
-        $dbname = "project",
+        $dbhost = null,
+        $dbuser = null,
+        $dbpass = null,
+        $dbname = null
     ) {
-        $this->dbhost = $dbhost;
-        $this->dbuser = $dbuser;
-        $this->dbpass = $dbpass;
-        $this->dbname = $dbname;
+        DotenvLoader::load(__DIR__ . '/../../');
+
+        $this->dbhost = $dbhost ?: $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: "localhost";
+        $this->dbuser = $dbuser ?: $_ENV['DB_USER'] ?? getenv('DB_USER') ?: "root";
+        $this->dbpass = $dbpass ?: $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: "";
+        $this->dbname = $dbname ?: $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: "fitness";
     }
     public function connect()
     {

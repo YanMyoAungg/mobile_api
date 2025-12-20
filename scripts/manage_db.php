@@ -1,20 +1,16 @@
 <?php
 
-/**
- * DB management script for this project.
- *
- * Usage:
- *  php scripts/manage_db.php create   # create database and tables (idempotent)
- *  php scripts/manage_db.php reset    # reset tables (truncate + reseed roles)
- *  php scripts/manage_db.php status   # show status
- *
- * Environment variables (optional): DB_HOST, DB_USER, DB_PASS, DB_NAME
- */
 
-$host = getenv('DB_HOST') ?: 'localhost';
-$user = getenv('DB_USER') ?: 'root';
-$pass = getenv('DB_PASS') ?: 'zenith172421';
-$dbname = getenv('DB_NAME') ?: 'project';
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Load .env
+\Helpers\DotenvLoader::load(__DIR__ . '/../');
+
+$host = $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: 'localhost';
+$user = $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'root';
+$pass = $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: '';
+$dbname = $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'fitness';
 
 $action = $argv[1] ?? 'status';
 
@@ -49,60 +45,48 @@ function tableExists($pdo, $dbname, $table)
 function createSchema($pdo, $dbname)
 {
     $created = [];
-    // roles table
-    if (!tableExists($pdo, $dbname, 'roles')) {
-        $sql = "CREATE TABLE roles (
-          id INT AUTO_INCREMENT PRIMARY KEY,
-          name VARCHAR(100),
-          value VARCHAR(50)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-        $pdo->exec($sql);
-        $created[] = 'roles';
-    }
 
-    // users table
     if (!tableExists($pdo, $dbname, 'users')) {
         $sql = "CREATE TABLE users (
           id INT AUTO_INCREMENT PRIMARY KEY,
-          name VARCHAR(255),
+          username VARCHAR(255),
           email VARCHAR(255) UNIQUE,
           phone VARCHAR(100),
           address TEXT,
           password VARCHAR(255),
-          role_id INT,
+          height DECIMAL(5,2) DEFAULT NULL,
+          current_weight DECIMAL(5,2) DEFAULT NULL,
+          date_of_birth DATE DEFAULT NULL,
+          gender ENUM('male', 'female', 'other') DEFAULT NULL,
           photo VARCHAR(255) DEFAULT NULL,
           suspended TINYINT(1) DEFAULT 0,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-          updated_at DATETIME DEFAULT NULL,
-          FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE SET NULL
+          updated_at DATETIME DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
         $pdo->exec($sql);
         $created[] = 'users';
     }
 
+    if (!tableExists($pdo, $dbname, 'activities')) {
+        $sql = "CREATE TABLE activities (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            activity_type ENUM('running', 'walking', 'cycling', 'swimming', 'jumping_rope') NOT NULL,
+            duration INT NOT NULL COMMENT 'Duration in minutes',
+            calories_burned INT NOT NULL COMMENT 'Calories burned',
+            activity_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            INDEX idx_user_date (user_id, activity_date)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        $pdo->exec($sql);
+        $created[] = 'activities';
+    }
+
     return $created;
 }
 
-function seedRoles($pdo, $dbname)
-{
-    // insert default roles if table empty
-    $stmt = $pdo->prepare('SELECT COUNT(*) FROM roles');
-    $stmt->execute();
-    $count = (int) $stmt->fetchColumn();
-    if ($count === 0) {
-        $ins = $pdo->prepare('INSERT INTO roles (id, name, value) VALUES (:id, :name, :value)');
-        $defaults = [
-            ['id' => 1, 'name' => 'User', 'value' => '11'],
-            ['id' => 2, 'name' => 'Manager', 'value' => '22'],
-            ['id' => 3, 'name' => 'Admin', 'value' => '33'],
-        ];
-        foreach ($defaults as $r) {
-            $ins->execute($r);
-        }
-        return true;
-    }
-    return false;
-}
+// Remove seedRoles function completely as roles are no longer used.
 
 if ($action === 'create') {
     // connect without db to create database if needed
@@ -122,24 +106,16 @@ if ($action === 'create') {
     } else {
         echo "All tables already exist.\n";
     }
-
-    $seeded = seedRoles($pdoDb, $dbname);
-    if ($seeded) {
-        echo "Inserted default roles.\n";
-    } else {
-        echo "Roles table already has data; skipping seed.\n";
-    }
-
     exit(0);
 } elseif ($action === 'reset') {
-    // truncate tables (if exist) and reseed roles
+    // truncate tables (if exist)
     $pdo = connectPDO($host, $user, $pass, true, $dbname);
     if (!dbExists(connectPDO($host, $user, $pass, false), $dbname)) {
         echo "Database '$dbname' does not exist. Nothing to reset.\n";
         exit(1);
     }
 
-    $tables = ['users', 'roles'];
+    $tables = ['users', 'activities'];
     try {
         // Disable foreign key checks so we can truncate referenced tables.
         $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
@@ -157,13 +133,7 @@ if ($action === 'create') {
         $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
     }
 
-    // reseed roles defaults
-    $seeded = seedRoles($pdo, $dbname);
-    if ($seeded) {
-        echo "Re-seeded default roles.\n";
-    } else {
-        echo "Roles table already has data after reset (unexpected).\n";
-    }
+    // reseed roles logic removed
 
     exit(0);
 } elseif ($action === 'status') {

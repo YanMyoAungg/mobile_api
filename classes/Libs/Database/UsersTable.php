@@ -13,7 +13,7 @@ class UsersTable
     public function getAll()
     {
         $statement = $this->db->query(
-            "SELECT users.*,roles.name AS role FROM users LEFT JOIN roles ON users.role_id = roles.id"
+            "SELECT * FROM users"
         );
         return $statement->fetchAll();
     }
@@ -35,7 +35,7 @@ class UsersTable
 
       public function findByUsernameAndPassword($username, $password)
     {
-        $statement = $this->db->prepare("SELECT * FROM users WHERE name=:username");
+        $statement = $this->db->prepare("SELECT * FROM users WHERE username=:username");
         $statement->execute(["username" => $username]);
         $user = $statement->fetch();
         // return $user ?? false;
@@ -62,7 +62,7 @@ class UsersTable
     {
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         $statement = $this->db->prepare(
-            "INSERT INTO users(name,email,phone,address,password,created_at) VALUES (:name,:email,:phone,:address,:password,NOW())"
+            "INSERT INTO users(username,email,phone,address,password,created_at) VALUES (:username,:email,:phone,:address,:password,NOW())"
         );
         $statement->execute($data);
         return $this->db->lastInsertId();
@@ -103,11 +103,28 @@ class UsersTable
         $statement->execute(['id' => $id]);
         return $statement->rowCount();
     }
-    public function changeRole($id, $role_id)
+
+    public function getById($id)
     {
-        $statement = $this->db->prepare("UPDATE users SET role_id=:role_id WHERE
-        id=:id");
-        $statement->execute(['id' => $id, 'role_id' => $role_id]);
+        $statement = $this->db->prepare("SELECT * FROM users WHERE id = :id");
+        $statement->execute(['id' => $id]);
+        return $statement->fetch();
+    }
+
+    public function updateProfile($id, $data)
+    {
+        $sql = "UPDATE users SET 
+            phone = :phone,
+            height = :height,
+            current_weight = :current_weight,
+            date_of_birth = :date_of_birth,
+            gender = :gender,
+            updated_at = NOW()
+        WHERE id = :id";
+        
+        $data['id'] = $id;
+        $statement = $this->db->prepare($sql);
+        $statement->execute($data);
         return $statement->rowCount();
     }
 }
