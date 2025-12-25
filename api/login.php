@@ -8,6 +8,7 @@ use Libs\Database\UsersTable;
 // Set content type to JSON
 header('Content-Type: application/json');
 
+
 // Check if request method is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo "Method Not Allowed";

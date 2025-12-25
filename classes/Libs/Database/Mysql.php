@@ -19,19 +19,18 @@ class Mysql
         $dbpass = null,
         $dbname = null
     ) {
-        DotenvLoader::load(__DIR__ . '/../../');
+        DotenvLoader::load(__DIR__ . '/../../../');
 
-        $this->dbhost = $dbhost ?: $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: "localhost";
-        $this->dbuser = $dbuser ?: $_ENV['DB_USER'] ?? getenv('DB_USER') ?: "root";
-        $this->dbpass = $dbpass ?: $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: "";
-        $this->dbname = $dbname ?: $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: "fitness";
+        $this->dbhost = $dbhost ?: ($_ENV['DB_HOST'] ?? "localhost");
+        $this->dbuser = $dbuser ?: ($_ENV['DB_USER'] ?? "root");
+        $this->dbpass = $dbpass ?: ($_ENV['DB_PASS'] ?? "");
+        $this->dbname = $dbname ?: ($_ENV['DB_NAME'] ?? "fitness");
     }
     public function connect()
     {
         try {
             $this->db = new PDO(
-                "mysql:dbhost=$this->dbhost;
-                dbname=$this->dbname",
+                "mysql:host=$this->dbhost;dbname=$this->dbname",
                 $this->dbuser,
                 $this->dbpass,
                 [

@@ -7,7 +7,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Load .env
 \Helpers\DotenvLoader::load(__DIR__ . '/../');
 
-$host = $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: 'localhost';
+$host = $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: 'localhost'; 
 $user = $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'root';
 $pass = $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: '';
 $dbname = $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'fitness';
@@ -71,7 +71,7 @@ function createSchema($pdo, $dbname)
         $sql = "CREATE TABLE activities (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
-            activity_type ENUM('running', 'walking', 'cycling', 'swimming', 'jumping_rope') NOT NULL,
+            activity_type ENUM('running', 'walking', 'cycling', 'swimming', 'jumping_rope', 'weight_lifting') NOT NULL,
             duration INT NOT NULL COMMENT 'Duration in minutes',
             calories_burned INT NOT NULL COMMENT 'Calories burned',
             activity_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -81,6 +81,19 @@ function createSchema($pdo, $dbname)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
         $pdo->exec($sql);
         $created[] = 'activities';
+    }
+
+    if (!tableExists($pdo, $dbname, 'weekly_goals')) {
+        $sql = "CREATE TABLE weekly_goals (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL UNIQUE,
+            target_calories INT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        $pdo->exec($sql);
+        $created[] = 'weekly_goals';
     }
 
     return $created;

@@ -120,7 +120,7 @@ All API responses follow this standard JSON format:
   * **Endpoint**: `POST /api/activities.php`
   * **Body**:
     * `user_id`
-    * `activity_type` (running, walking, cycling, swimming, jumping_rope)
+    * `activity_type` (running, walking, cycling, swimming, jumping_rope, weight_lifting)
     * `duration` (minutes)
     * `calories_burned`
     * `activity_date` (Optional, YYYY-MM-DD HH:MM:SS)

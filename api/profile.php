@@ -25,11 +25,6 @@ if ($method === 'GET') {
         $user = $table->getById($user_id);
         
         if ($user) {
-            // Filter only profile fields to return, or return full object?
-            // User requested "profile page".
-            // Let's return the profile-specific info + basic user info.
-            
-            // Calculate age if DOB exists
             $age = null;
             if ($user->date_of_birth) {
                 $dob = new DateTime($user->date_of_birth);
