@@ -119,6 +119,9 @@ if ($method === 'GET') {
             'activity_type' => $activity_type,
             'duration' => $duration,
             'calories_burned' => $_POST['calories_burned'] ?? 0,
+            'latitude' => $_POST['latitude'] ?? null,
+            'longitude' => $_POST['longitude'] ?? null,
+            'location_name' => $_POST['location_name'] ?? null,
             'activity_date' => $_POST['activity_date'] ?? date('Y-m-d H:i:s')
         ];
         
@@ -158,6 +161,9 @@ if ($method === 'GET') {
             'activity_type' => $_PUT['activity_type'],
             'duration' => $_PUT['duration'],
             'calories_burned' => $_PUT['calories_burned'] ?? 0,
+            'latitude' => $_PUT['latitude'] ?? null,
+            'longitude' => $_PUT['longitude'] ?? null,
+            'location_name' => $_PUT['location_name'] ?? null,
             'activity_date' => $_PUT['activity_date']
         ];
         

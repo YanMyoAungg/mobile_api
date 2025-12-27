@@ -15,9 +15,11 @@ class ActivityTable
     public function create($data)
     {
         $sql = "INSERT INTO activities (
-            user_id, activity_type, duration, calories_burned, activity_date
+            user_id, activity_type, duration, calories_burned, 
+            latitude, longitude, location_name, activity_date
         ) VALUES (
-            :user_id, :activity_type, :duration, :calories_burned, :activity_date
+            :user_id, :activity_type, :duration, :calories_burned, 
+            :latitude, :longitude, :location_name, :activity_date
         )";
         
         $statement = $this->db->prepare($sql);
@@ -89,6 +91,9 @@ class ActivityTable
             activity_type = :activity_type,
             duration = :duration,
             calories_burned = :calories_burned,
+            latitude = :latitude,
+            longitude = :longitude,
+            location_name = :location_name,
             activity_date = :activity_date
         WHERE id = :id AND user_id = :user_id";
         
